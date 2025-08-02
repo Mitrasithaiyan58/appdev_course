@@ -16,13 +16,14 @@ import java.util.List;
 @CrossOrigin(origins="http://localhost:3000")
 public class CourseController 
 {
-    
+
 @Autowired
 
 private CourseService courseService;
 @PostMapping
 public Course addCourse(@RequestBody Course course)
 {
+    
     return courseService.addCourse(course);
 }
 @GetMapping
