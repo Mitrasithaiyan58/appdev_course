@@ -10,9 +10,9 @@ public class Course{
     private String trainerName;
     private String courseDuration;
     private String startDate;
-    public courseDuration;
-}
-public class Course ()
+   
+
+public  Course ()
 {
 
 }
