@@ -39,6 +39,14 @@ public String getTrainerName()
 {
     return trainerName;
 }
+public void setTrainerName(String trainerName)
+{
+    this.trainerName=trainerName;
+}
+public String getCourseDuration()
+{
+    return courseDuration;
+}
 public void setcourseDuration(String courseDuration)
 {
     this.courseDuration=courseDuration;
