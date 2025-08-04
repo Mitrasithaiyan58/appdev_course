@@ -27,7 +27,7 @@ public long getId()
 {
     return id;
 }
-public String getcourseTitle()
+public String getCourseTitle()
 {
     return courseTitle;
 }
@@ -47,7 +47,7 @@ public String getCourseDuration()
 {
     return courseDuration;
 }
-public void setcourseDuration(String courseDuration)
+public void setCourseDuration(String courseDuration)
 {
     this.courseDuration=courseDuration;
 }
