@@ -16,7 +16,13 @@ public class CourseService {
     {
         return courseRepository.save(course);
     }
-
+    
+//get by id
+    public Course getCourseById(Long id)
+    {
+        return courseRepository.findById(id).orElse(null);
+    }
+    
     //get
     public List<Course> getAllCourses()
     {
