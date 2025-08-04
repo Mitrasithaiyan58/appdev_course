@@ -24,6 +24,17 @@ public class CourseService {
     }
 
     //put
+    public Course updateCourse(Long id,Course course)
+    {
+        course.setId(id);
+        return courseRepository.save(course);
+    }
+
+    //delete
+    public void deleteCourse(Long id)
+    {
+        courseRepository.deleteById(id);
+    }
 
 }
 
