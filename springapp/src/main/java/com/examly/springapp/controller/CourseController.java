@@ -63,9 +63,17 @@ public ResponseEntity<Course> updateCourse(@PathVariable Long id,@RequestBody Co
 }
 
 @DeleteMapping("/delete/{id}")
-public ResponseEntity<Void> deleteCourse(@PathVariable Long id)
-{
-    courseService.deleteCourse(id);
-    return ResponseEntity.ok().build();
-}
+
+    public String deleteCourse(@PathVariable Long id)
+    {
+        courseService.deleteCourse(id);
+        return "Successfully deleted";
+    }
+
+// @DeleteMapping("/delete/{id}")
+// public ResponseEntity<Void> deleteCourse(@PathVariable Long id)
+// {
+//     courseService.deleteCourse(id);
+//     return ResponseEntity.ok().build();
+// }
 }
