@@ -1,14 +1,23 @@
 package com.examly.springapp.model;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 @Entity
 @Table(name="courses")
 public class Course{
     @Id
     // @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @NotBlank(message="Course title is required")
     private String courseTitle;
+
+    @NotBlank(message="Trainer name is required")
     private String trainerName;
+
+    @NotBlank(message="Course duration is required")
     private String courseDuration;
+
+    @NotBlank(message="Start date is required")
     private String startDate;
    
 
