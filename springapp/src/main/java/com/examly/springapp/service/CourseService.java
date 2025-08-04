@@ -24,10 +24,10 @@ public class CourseService {
     }
 
     //put
-    public Course updateCourse(Long id,Course course)
+    public Course updateCourse(Long id,Course updatedCourse)
     {
-        course.setId(id);
-        return courseRepository.save(course);
+        updatedCourse.setId(id);
+        return courseRepository.save(updatedCourse);
     }
 
     //delete
