@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import com.examly.springapp.repository.CourseRepository;
 @Service
@@ -13,7 +12,7 @@ public class CourseService {
     private CourseRepository courseRepository;
 //post
 
-    public Course addCourse(@RequestBody Course course)
+    public Course addCourse(Course course)
     {
         return courseRepository.save(course);
     }

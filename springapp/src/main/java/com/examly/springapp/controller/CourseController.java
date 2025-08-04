@@ -20,13 +20,13 @@ public class CourseController
 @Autowired
 
 private CourseService courseService;
-@PostMapping
+@PostMapping("/post")
 public Course addCourse(@RequestBody Course course)
 {
     
     return courseService.addCourse(course);
 }
-@GetMapping
+@GetMapping("/get")
 public List<Course>getAllCourses()
 {
     return courseService.getAllCourses();
