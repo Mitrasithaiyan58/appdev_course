@@ -18,9 +18,9 @@ public class CourseService {
     }
     
 //get by id
-    public Course getCourseById(Long id)
+    public Course getCourseById(long courseId)
     {
-        return courseRepository.findById(id).orElse(null);
+        return courseRepository.findById(courseId).orElse(null);
     }
     
     //get
@@ -32,19 +32,19 @@ public class CourseService {
     //put
     public Course updateCourse(Long courseId,Course updatedCourse)
     {
-        updatedCourse.setcourseId(courseId);
+        updatedCourse.setCourseId(courseId);
         return courseRepository.save(updatedCourse);
     }
 
     //delete
-    public void deleteCourse(Long id)
+    public void deleteCourse(Long courseId)
     {
-        courseRepository.deleteById(id);
+        courseRepository.deleteById(courseId);
     }
 
-    public boolean exists(Long id)
+    public boolean exists(Long courseId)
     {
-        return courseRepository.existsById(id);
+        return courseRepository.existsById(courseId);
     }
 
 }
