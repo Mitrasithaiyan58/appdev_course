@@ -42,6 +42,11 @@ public class CourseService {
         courseRepository.deleteById(id);
     }
 
+    public boolean exists(Long id)
+    {
+        return courseRepository.existsById(id);
+    }
+
 }
 
 
