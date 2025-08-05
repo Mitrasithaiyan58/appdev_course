@@ -100,7 +100,11 @@ public void setIsActive(boolean active)
     isActive=active;
 }
 
-
+public enum Level{
+    BEGINNER,
+    INTERMEDIATE,
+    ADVANCED
+}
 
 }
 
