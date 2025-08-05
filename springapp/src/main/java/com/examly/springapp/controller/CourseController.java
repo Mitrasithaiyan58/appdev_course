@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.examly.springapp.model.Course;
@@ -33,27 +34,36 @@ private CourseService courseService;
 public ResponseEntity<Course> addCourse(@Valid @RequestBody Course course)
 {
     
-    return ResponseEntity.ok (courseService.addCourse(course));
+    return new ResponseEntity<> (courseService.addCourse(course),HttpStatus.CREATED);
 }
 
 //get by id
 
-@GetMapping("get/{id}")
-public ResponseEntity<Course> getCourse(@PathVariable Long id)
+@GetMapping("/{id}")
+public ResponseEntity<?> getCourse(@PathVariable Long id)
 {
     Course course=courseService.getCourseById(id);
     if(course==null)
     {
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.status(Httpstatus.NOT_FOUND).body(Map.of("message","Course not found with id: "+id));
     }
+
     return ResponseEntity.ok(course);
 }
 
-@GetMapping("/get")
-public List<Course>getAllCourses()
+@GetMapping
+public ResponseEntity<List<Course>>getAllCourses(@RequestParam(required=false)Boolean active)
 {
-    return courseService.getAllCourses();
+    List<Course>courses=(active==null)
+    ?courseService.getAllCourses()
+    :courseService.getAllCourses().stream()
+    .filter(course->course.getIsActive()==active)
+    .toList();
+    return ResponseEntity.ok(courses);
 }
+
+   
+
 
 @PutMapping("/put/{id}")
 public ResponseEntity<Course> updateCourse(@PathVariable Long id,@RequestBody Course course)
