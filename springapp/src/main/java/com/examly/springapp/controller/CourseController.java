@@ -1,6 +1,7 @@
 package com.examly.springapp.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -46,7 +47,7 @@ public ResponseEntity<?> getCourse(@PathVariable Long id)
     Course course=courseService.getCourseById(id);
     if(course==null)
     {
-        return ResponseEntity.status(Httpstatus.NOT_FOUND).body(Map.of("message","Course not found with id: "+id));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","Course not found with id: "+id));
     }
 
     return ResponseEntity.ok(course);
@@ -109,4 +110,3 @@ public ResponseEntity<List<Course>>getAllCourses(@RequestParam(required=false)Bo
 //     courseService.deleteCourse(id);
 //     return ResponseEntity.ok().build();
 // }
-}
