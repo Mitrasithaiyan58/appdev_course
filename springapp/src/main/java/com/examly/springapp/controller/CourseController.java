@@ -11,6 +11,7 @@ import com.examly.springapp.service.CourseService;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/courses")
@@ -45,24 +46,20 @@ public class CourseController {
                 ? courseService.getAllCourses()
                 : courseService.getAllCourses().stream()
                     .filter(course -> course.getIsActive() == active)
-                    .toList();
+                    .collect(Collectors.toList());
         return ResponseEntity.ok(courses);
     }
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateCourse(@PathVariable Long id, @Valid @RequestBody Course course) {
-        if (!courseService.exists(id)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("message", "Course not found with id: " + id));
-        }
+    public ResponseEntity<Course> updateCourse(@PathVariable Long id, @Valid @RequestBody Course course) {
+        courseService.getCourseById(id); // Will throw if not found
         course.setCourseId(id);
-        Course updatedCourse = courseService.addCourse(course); // same save() method
+        Course updatedCourse = courseService.addCourse(course);
         return ResponseEntity.ok(updatedCourse);
     }
 
 
-   
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCourse(@PathVariable Long id) {
         if (!courseService.exists(id)) {
@@ -73,6 +70,3 @@ public class CourseController {
         return ResponseEntity.noContent().build();
     }
 }
-
-   
-  
