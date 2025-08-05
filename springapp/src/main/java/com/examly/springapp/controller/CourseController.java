@@ -29,7 +29,7 @@ public class CourseController
 private CourseService courseService;
 
 //post
-@PostMapping("/post")
+@PostMapping
 public ResponseEntity<Course> addCourse(@Valid @RequestBody Course course)
 {
     
