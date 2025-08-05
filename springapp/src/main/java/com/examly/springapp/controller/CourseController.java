@@ -19,6 +19,7 @@ import com.examly.springapp.service.CourseService;
 import jakarta.validation.Valid;
 
 import java.util.List;
+import java.util.Map;
 @RestController
 @RequestMapping("/api/courses")
 @CrossOrigin(origins="http://localhost:3000")
@@ -62,23 +63,45 @@ public ResponseEntity<List<Course>>getAllCourses(@RequestParam(required=false)Bo
     return ResponseEntity.ok(courses);
 }
 
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateCourse(@PathVariable Long id, @Valid @RequestBody Course course) {
+        if (!courseService.exists(id)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Map.of("message", "Course not found with id: " + id));
+        }
+        course.setCourseId(id);
+        return ResponseEntity.ok(courseService.addCourse(course));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteCourse(@PathVariable Long id) {
+        if (!courseService.exists(id)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Map.of("message", "Course not found with id: " + id));
+        }
+        courseService.deleteCourse(id);
+        return ResponseEntity.noContent().build();
+    }
+}
+
    
 
 
-@PutMapping("/put/{id}")
-public ResponseEntity<Course> updateCourse(@PathVariable Long id,@RequestBody Course course)
-{
-    Course updated=courseService.updateCourse(id,course);
-    return ResponseEntity.ok(updated);
-}
+// @PutMapping("/put/{id}")
+// public ResponseEntity<Course> updateCourse(@PathVariable Long id,@RequestBody Course course)
+// {
+//     Course updated=courseService.updateCourse(id,course);
+//     return ResponseEntity.ok(updated);
+// }
 
-@DeleteMapping("/delete/{id}")
+// @DeleteMapping("/delete/{id}")
 
-    public String deleteCourse(@PathVariable Long id)
-    {
-        courseService.deleteCourse(id);
-        return "Successfully deleted";
-    }
+//     public String deleteCourse(@PathVariable Long id)
+//     {
+//         courseService.deleteCourse(id);
+//         return "Successfully deleted";
+//     }
 
 // @DeleteMapping("/delete/{id}")
 // public ResponseEntity<Void> deleteCourse(@PathVariable Long id)
