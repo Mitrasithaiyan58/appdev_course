@@ -14,7 +14,7 @@ public class Course{
     @NotBlank(message="Title must not be empty")
     private String title;
 
-    @NotBlank(message=Description must not be empty)
+    @NotBlank(message= "Description must not be empty")
     private String description;
 
     @Min(value=1,message="Duration must be at least 1 hour")
@@ -25,66 +25,82 @@ public class Course{
     private Level level;
 
     @DecimalMin(value="0.0",inclusive=true,message="Price must not be negative")
+    private double price;
 
-    @NotBlank(message="Course duration is required")
-    private String courseDuration;
+    private boolean isActive;
 
-    @NotBlank(message="Start date is required")
-    private String startDate;
+
+    // @NotBlank(message="Course duration is required")
+    // private String courseDuration;
+
+    // @NotBlank(message="Start date is required")
+    // private String startDate;
    
 
 public  Course ()
 {
 
 }
-public Course(String courseTitle,String trainerName,String courseDuration,String startDate)
+
+public long getCourseId()
 {
-    this.courseTitle=courseTitle;
-    this.trainerName=trainerName;
-    this.courseDuration=courseDuration;
-    this.startDate=startDate;
-}
-public long getId()
-{
-    return id;
+    return CourseId;
 }
 
-public void setId(long id)
+public void setCourseId(long CourseId)
 {
-    this.id=id;
+    this.CourseId=CourseId;
 }
-public String getCourseTitle()
+public String getTitle()
 {
-    return courseTitle;
+    return title;
 }
-public void setCourseTitle(String courseTitle)
+public void setTitle(String title)
 {
-    this.courseTitle=courseTitle;
+    this.title=title;
 }
-public String getTrainerName()
+public String getDescription()
 {
-    return trainerName;
+    return description;
 }
-public void setTrainerName(String trainerName)
+public void setDescription(String decription)
 {
-    this.trainerName=trainerName;
+    this.description=description;
 }
-public String getCourseDuration()
+public int getDuration()
 {
-    return courseDuration;
+    return duration;
 }
-public void setCourseDuration(String courseDuration)
+public void setDuration(int duration)
 {
-    this.courseDuration=courseDuration;
+    this.duration=duration;
 }
-public String getStartDate()
+public Level getLevel()
 {
-    return startDate;
+    return level;
 }
-public void setStartDate(String startDate)
+public void setLevel(Level level)
 {
-    this.startDate=startDate;
+    this.level=level;
 }
+public double getPrice()
+{
+    return price;
+}
+public void setPrice(double price)
+{
+    this.price=price;
+}
+public boolean getIsActive()
+{
+    return isActive;
+}
+public void setIsActive(boolean active)
+{
+    isActive=active;
+}
+
+
 
 }
 
