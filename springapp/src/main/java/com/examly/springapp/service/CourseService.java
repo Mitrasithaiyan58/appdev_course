@@ -30,9 +30,9 @@ public class CourseService {
     }
 
     //put
-    public Course updateCourse(Long id,Course updatedCourse)
+    public Course updateCourse(Long courseId,Course updatedCourse)
     {
-        updatedCourse.setId(id);
+        updatedCourse.setcourseId(courseId);
         return courseRepository.save(updatedCourse);
     }
 
