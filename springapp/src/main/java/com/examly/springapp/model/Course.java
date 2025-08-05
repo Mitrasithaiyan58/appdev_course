@@ -1,18 +1,30 @@
 package com.examly.springapp.model;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name="courses")
 public class Course{
     @Id
-    // @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long courseId;
 
-    @NotBlank(message="Course title is required")
-    private String courseTitle;
+    @NotBlank(message="Title must not be empty")
+    private String title;
 
-    @NotBlank(message="Trainer name is required")
-    private String trainerName;
+    @NotBlank(message=Description must not be empty)
+    private String description;
+
+    @Min(value=1,message="Duration must be at least 1 hour")
+    private int duration;
+
+    @NotNull(message="Level is required")
+    @Enumerated(EnumType.STRING)
+    private Level level;
+
+    @DecimalMin(value="0.0",inclusive=true,message="Price must not be negative")
 
     @NotBlank(message="Course duration is required")
     private String courseDuration;
