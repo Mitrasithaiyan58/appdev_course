@@ -38,9 +38,7 @@ public class Course{
    
 
 public  Course ()
-{
-
-}
+{}
 
 public long getCourseId()
 {
