@@ -1,4 +1,5 @@
 package com.examly.springapp.service;
+import com.examly.springapp.exception.CourseNotFoundException;
 import com.examly.springapp.model.Course;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class CourseService {
 //get by id
     public Course getCourseById(long courseId)
     {
-        return courseRepository.findById(courseId).orElse(null);
+        return courseRepository.findById(courseId).orElseThrow(() -> new CourseNotFoundException(courseId));
     }
     
     //get
