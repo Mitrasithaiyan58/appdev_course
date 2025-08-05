@@ -44,12 +44,12 @@ public  Course ()
 
 public long getCourseId()
 {
-    return CourseId;
+    return courseId;
 }
 
-public void setCourseId(long CourseId)
+public void setCourseId(long courseId)
 {
-    this.CourseId=CourseId;
+    this.courseId=courseId;
 }
 public String getTitle()
 {
@@ -63,7 +63,7 @@ public String getDescription()
 {
     return description;
 }
-public void setDescription(String decription)
+public void setDescription(String description)
 {
     this.description=description;
 }
