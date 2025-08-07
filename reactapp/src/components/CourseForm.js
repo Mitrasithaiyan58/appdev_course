@@ -1,6 +1,6 @@
 // File: src/components/CourseForm.jsx
 import React, { useState } from 'react';
-import { BASE_URL } from '../constants';
+import { BASE_URL } from '../utils/constants'; // ✅ Corrected import
 
 function CourseForm() {
   const [form, setForm] = useState({ title: '', description: '', duration: '', level: '', price: '' });
@@ -60,37 +60,35 @@ function CourseForm() {
     setApiError('');
   };
 
- 
+return (
+<form onSubmit={handleSubmit}>
+<input data-testid="title-input" placeholder="Title" value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} />
+{errors.title && <div>{errors.title}</div>}
 
-  return (
-    <form onSubmit={handleSubmit}>
-      <input data-testid="title-input" placeholder="Title" value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} />
-      {errors.title && <div>{errors.title}</div>}
+<textarea data-testid="description-input" placeholder="Description" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })}></textarea>
+{errors.description && <div>{errors.description}</div>}
 
-      <textarea data-testid="description-input" placeholder="Description" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })}></textarea>
-      {errors.description && <div>{errors.description}</div>}
+<input data-testid="duration-input" type="number" placeholder="Duration" value={form.duration} onChange={e => setForm({ ...form, duration: Number(e.target.value) })} />
+{errors.duration && <div>{errors.duration}</div>}
 
-      <input data-testid="duration-input" type="number" placeholder="Duration" value={form.duration} onChange={e => setForm({ ...form, duration: Number(e.target.value) })} />
-      {errors.duration && <div>{errors.duration}</div>}
+<select data-testid="level-select" value={form.level} onChange={e => setForm({ ...form, level: e.target.value })}>
+<option value="">Select Level</option>
+<option value="BEGINNER">BEGINNER</option>
+<option value="INTERMEDIATE">INTERMEDIATE</option>
+<option value="ADVANCED">ADVANCED</option>
+</select>
+{errors.level && <div>{errors.level}</div>}
 
-      <select data-testid="level-select" value={form.level} onChange={e => setForm({ ...form, level: e.target.value })}>
-        <option value="">Select Level</option>
-        <option value="BEGINNER">BEGINNER</option>
-        <option value="INTERMEDIATE">INTERMEDIATE</option>
-        <option value="ADVANCED">ADVANCED</option>
-      </select>
-      {errors.level && <div>{errors.level}</div>}
+<input data-testid="price-input" type="number" placeholder="Price" value={form.price} onChange={e => setForm({ ...form, price: Number(e.target.value) })} />
+{errors.price && <div>{errors.price}</div>}
 
-      <input data-testid="price-input" type="number" placeholder="Price" value={form.price} onChange={e => setForm({ ...form, price: Number(e.target.value) })} />
-      {errors.price && <div>{errors.price}</div>}
+<button data-testid="submit-btn" type="submit">Submit</button>
+<button data-testid="reset-btn" type="button" onClick={resetForm}>Reset</button>
 
-      <button data-testid="submit-btn" type="submit">Submit</button>
-      <button data-testid="reset-btn" type="button" onClick={resetForm}>Reset</button>
-
-      {success && <div data-testid="api-success">Course added successfully!</div>}
-      {apiError && <div data-testid="api-error">{apiError}</div>}
-    </form>
-  );
+{success && <div data-testid="api-success">Course added successfully!</div>}
+{apiError && <div data-testid="api-error">{apiError}</div>}
+</form>
+);
 }
 
 export default CourseForm;
