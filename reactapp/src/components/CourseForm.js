@@ -1,15 +1,23 @@
 // File: src/components/CourseForm.jsx
 import React, { useState } from 'react';
-import { BASE_URL } from '../utils/constants'; // ✅ Corrected import
+import { BASE_URL } from '../utils/constants';
 
 function CourseForm() {
-  const [form, setForm] = useState({ title: '', description: '', duration: '', level: '', price: '' });
+  const [form, setForm] = useState({
+    title: '',
+    description: '',
+    duration: '',
+    level: '',
+    price: ''
+  });
+
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState(false);
   const [apiError, setApiError] = useState('');
 
   const validate = () => {
     const newErrors = {};
+
     if (!form.title) newErrors.title = 'Title is required';
     else if (form.title.length > 100) newErrors.title = 'Title must be at most 100 characters';
 
@@ -41,15 +49,23 @@ function CourseForm() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...form, isActive: true })
       });
+
       if (response.ok) {
         setSuccess(true);
         setForm({ title: '', description: '', duration: '', level: '', price: '' });
       } else {
-        const errorData = await response.json();
-        setApiError(errorData.message || 'Something went wrong');
+        const text = await response.text();
+        let message;
+        try {
+          const json = JSON.parse(text);
+          message = json.message || json.error || 'Something went wrong';
+        } catch (e) {
+          message = text || 'Something went wrong';
+        }
+        setApiError(message);
       }
     } catch (err) {
-      setApiError(err.message);
+      setApiError(err.message || 'Network error');
     }
   };
 
@@ -62,16 +78,36 @@ function CourseForm() {
 
 return (
 <form onSubmit={handleSubmit}>
-<input data-testid="title-input" placeholder="Title" value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} />
+<input
+data-testid="title-input"
+placeholder="Title"
+value={form.title}
+onChange={e => setForm({ ...form, title: e.target.value })}
+/>
 {errors.title && <div>{errors.title}</div>}
 
-<textarea data-testid="description-input" placeholder="Description" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })}></textarea>
+<textarea
+data-testid="description-input"
+placeholder="Description"
+value={form.description}
+onChange={e => setForm({ ...form, description: e.target.value })}
+/>
 {errors.description && <div>{errors.description}</div>}
 
-<input data-testid="duration-input" type="number" placeholder="Duration" value={form.duration} onChange={e => setForm({ ...form, duration: Number(e.target.value) })} />
+<input
+data-testid="duration-input"
+type="number"
+placeholder="Duration"
+value={form.duration}
+onChange={e => setForm({ ...form, duration: Number(e.target.value) })}
+/>
 {errors.duration && <div>{errors.duration}</div>}
 
-<select data-testid="level-select" value={form.level} onChange={e => setForm({ ...form, level: e.target.value })}>
+<select
+data-testid="level-select"
+value={form.level}
+onChange={e => setForm({ ...form, level: e.target.value })}
+>
 <option value="">Select Level</option>
 <option value="BEGINNER">BEGINNER</option>
 <option value="INTERMEDIATE">INTERMEDIATE</option>
@@ -79,14 +115,20 @@ return (
 </select>
 {errors.level && <div>{errors.level}</div>}
 
-<input data-testid="price-input" type="number" placeholder="Price" value={form.price} onChange={e => setForm({ ...form, price: Number(e.target.value) })} />
+<input
+data-testid="price-input"
+type="number"
+placeholder="Price"
+value={form.price}
+onChange={e => setForm({ ...form, price: Number(e.target.value) })}
+/>
 {errors.price && <div>{errors.price}</div>}
 
 <button data-testid="submit-btn" type="submit">Submit</button>
 <button data-testid="reset-btn" type="button" onClick={resetForm}>Reset</button>
 
 {success && <div data-testid="api-success">Course added successfully!</div>}
-{apiError && <div data-testid="api-error">{apiError}</div>}
+{apiError && <div data-testid="api-error">Error: {apiError}</div>}
 </form>
 );
 }
