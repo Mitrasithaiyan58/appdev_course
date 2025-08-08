@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import CourseForm from "./components/CourseForm";
 import CourseList from "./components/CourseList";
-import "./App.css"; // your custom styling
+import "./App.css";
+import { CourseViewProvider, useCourseView } from "./context/Context";
 
-function App() {
-  const [showForm, setShowForm] = useState(true);
+function AppContent() {
+  const { showForm, setShowForm } = useCourseView();
 
   return (
     <div className="app-container">
@@ -27,6 +28,14 @@ function App() {
         {showForm ? <CourseForm /> : <CourseList />}
       </div>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <CourseViewProvider>
+      <AppContent />
+    </CourseViewProvider>
   );
 }
 
