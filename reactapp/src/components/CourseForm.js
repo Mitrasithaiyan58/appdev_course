@@ -1,136 +1,67 @@
-// File: src/components/CourseForm.jsx
-import React, { useState } from 'react';
-import { BASE_URL } from '../utils/constants';
+// CourseForm.jsx
+import React, { useState } from "react";
 
-function CourseForm() {
-  const [form, setForm] = useState({
-    title: '',
-    description: '',
-    duration: '',
-    level: '',
-    price: ''
+const CourseForm = () => {
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    duration: "",
+    level: "",
+    price: ""
   });
-
   const [errors, setErrors] = useState({});
-  const [success, setSuccess] = useState(false);
-  const [apiError, setApiError] = useState('');
+  const [message, setMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const validate = () => {
     const newErrors = {};
+    if (!formData.title) newErrors.title = "Title is required";
+    else if (formData.title.length > 100) newErrors.title = "Title must be at most 100 characters";
+    if (formData.description.length > 500) newErrors.description = "Description must be at most 500 characters";
+    if (!formData.duration) newErrors.duration = "Duration is required";
+    else if (formData.duration < 1) newErrors.duration = "Duration must be at least 1";
+    if (!formData.level) newErrors.level = "Level is required";
+    if (!formData.price && formData.price !== 0) newErrors.price = "Price is required";
+    else if (formData.price < 0) newErrors.price = "Price must be non-negative number";
+    return newErrors;
+  };
 
-    if (!form.title) newErrors.title = 'Title is required';
-    else if (form.title.length > 100) newErrors.title = 'Title must be at most 100 characters';
-
-    if (!form.description) newErrors.description = 'Description is required';
-    else if (form.description.length > 500) newErrors.description = 'Description must be at most 500 characters';
-
-    if (!form.duration) newErrors.duration = 'Duration is required';
-    else if (form.duration < 1) newErrors.duration = 'Duration must be at least 1';
-
-    if (!form.level) newErrors.level = 'Level is required';
-
-    if (!form.price) newErrors.price = 'Price is required';
-    else if (form.price < 0) newErrors.price = 'Price must be non-negative number';
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSuccess(false);
-    setApiError('');
-
-    if (!validate()) return;
-
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+    setErrors({});
     try {
-      const response = await fetch(`${BASE_URL}/api/courses`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, isActive: true })
+      const response = await fetch("/api/courses", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData)
       });
-
+      const data = await response.json();
       if (response.ok) {
-        setSuccess(true);
-        setForm({ title: '', description: '', duration: '', level: '', price: '' });
+        setMessage("Course Added Successfully");
+        setErrorMessage("");
       } else {
-        const text = await response.text();
-        let message;
-        try {
-          const json = JSON.parse(text);
-          message = json.message || json.error || 'Something went wrong';
-        } catch (e) {
-          message = text || 'Something went wrong';
-        }
-        setApiError(message);
+        setErrorMessage(data.message || "Failed to add course");
+        setMessage("");
       }
     } catch (err) {
-      setApiError(err.message || 'Network error');
+      setErrorMessage(err.message);
+      setMessage("");
     }
   };
 
-  const resetForm = () => {
-    setForm({ title: '', description: '', duration: '', level: '', price: '' });
+  const handleReset = () => {
+    setFormData({ title: "", description: "", duration: "", level: "", price: "" });
     setErrors({});
-    setSuccess(false);
-    setApiError('');
   };
 
-return (
-<form onSubmit={handleSubmit}>
-<input
-data-testid="title-input"
-placeholder="Title"
-value={form.title}
-onChange={e => setForm({ ...form, title: e.target.value })}
-/>
-{errors.title && <div>{errors.title}</div>}
-
-<textarea
-data-testid="description-input"
-placeholder="Description"
-value={form.description}
-onChange={e => setForm({ ...form, description: e.target.value })}
-/>
-{errors.description && <div>{errors.description}</div>}
-
-<input
-data-testid="duration-input"
-type="number"
-placeholder="Duration"
-value={form.duration}
-onChange={e => setForm({ ...form, duration: Number(e.target.value) })}
-/>
-{errors.duration && <div>{errors.duration}</div>}
-
-<select
-data-testid="level-select"
-value={form.level}
-onChange={e => setForm({ ...form, level: e.target.value })}
->
-<option value="">Select Level</option>
-<option value="BEGINNER">BEGINNER</option>
-<option value="INTERMEDIATE">INTERMEDIATE</option>
-<option value="ADVANCED">ADVANCED</option>
-</select>
-{errors.level && <div>{errors.level}</div>}
-
-<input
-data-testid="price-input"
-type="number"
-placeholder="Price"
-value={form.price}
-onChange={e => setForm({ ...form, price: Number(e.target.value) })}
-/>
-{errors.price && <div>{errors.price}</div>}
-
-<button data-testid="submit-btn" type="submit">Submit</button>
-<button data-testid="reset-btn" type="button" onClick={resetForm}>Reset</button>
-
-{success && <div data-testid="api-success">Course added successfully!</div>}
-{apiError && <div data-testid="api-error">Error: {apiError}</div>}
-</form>
-);
-}
-
-export default CourseForm;
+ /
