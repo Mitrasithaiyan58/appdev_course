@@ -64,4 +64,35 @@ const CourseForm = () => {
     setErrors({});
   };
 
- /
+ return (
+<form onSubmit={handleSubmit}>
+<input data-testid="title-input" name="title" value={formData.title} onChange={handleChange} />
+{errors.title && <div>{errors.title}</div>}
+
+<textarea data-testid="description-input" name="description" value={formData.description} onChange={handleChange} />
+{errors.description && <div>{errors.description}</div>}
+
+<input data-testid="duration-input" name="duration" type="number" value={formData.duration} onChange={handleChange} />
+{errors.duration && <div>{errors.duration}</div>}
+
+<select data-testid="level-select" name="level" value={formData.level} onChange={handleChange}>
+<option value="">Select</option>
+<option value="BEGINEER">Beginner</option>
+<option value="INTERMEDIATE">Intermediate</option>
+<option value="ADVANCED">Advanced</option>
+</select>
+{errors.level && <div>{errors.level}</div>}
+
+<input data-testid="price-input" name="price" type="number" value={formData.price} onChange={handleChange} />
+{errors.price && <div>{errors.price}</div>}
+
+<button data-testid="submit-btn" type="submit">Submit</button>
+<button data-testid="reset-btn" type="button" onClick={handleReset}>Reset</button>
+
+{message && <div data-testid="api-success">Course Added Successfully</div>}
+{errorMessage && <div data-testid="api-error">{errorMessage}</div>}
+</form>
+);
+};
+
+export default CourseForm;
