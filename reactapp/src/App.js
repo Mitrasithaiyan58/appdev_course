@@ -1,41 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import CourseForm from "./components/CourseForm";
-import CourseList from "./components/CourseList";
-import "./App.css";
-import { CourseViewProvider, useCourseView } from "./context/Context";
-
-function AppContent() {
-  const { showForm, setShowForm } = useCourseView();
-
-  return (
-    <div className="app-container">
-      <h1 className="main-title">Course Management System</h1>
-      <div className="button-group">
-        <button
-          className={`toggle-button ${!showForm ? "active" : ""}`}
-          onClick={() => setShowForm(false)}
-        >
-          View Courses
-        </button>
-        <button
-          className={`toggle-button ${showForm ? "active" : ""}`}
-          onClick={() => setShowForm(true)}
-        >
-          Add Course
-        </button>
-      </div>
-      <div className="content-container">
-        {showForm ? <CourseForm /> : <CourseList />}
-      </div>
-    </div>
-  );
-}
+import CourseDetails from "./components/CourseDetails";
 
 function App() {
+  const [view, setView] = useState("list");
+
   return (
-    <CourseViewProvider>
-      <AppContent />
-    </CourseViewProvider>
+    <div style={{ padding: "20px" }}>
+      <h1>Course Management</h1>
+      <nav>
+        <button onClick={() => setView("list")}>View Courses</button>
+        <button onClick={() => setView("add")}>Add Course</button>
+      </nav>
+
+      {view === "list" && <CourseDetails />}
+      {view === "add" && <CourseForm onCourseAdded={() => setView("list")} />}
+    </div>
   );
 }
 
