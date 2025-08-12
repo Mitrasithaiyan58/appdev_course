@@ -1,92 +1,132 @@
 import React, { useState } from "react";
-import { addCourse } from "../utils/api";
+import axios from "axios";
+import "./CourseForm.css";
 
 const CourseForm = ({ onCourseAdded }) => {
-  const [form, setForm] = useState({
-    courseTitle: "",
-    trainerName: "",
-    courseDuration: "",
-    startDate: ""
-  });
-
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [courseDuration, setCourseDuration] = useState("");
+  const [price, setPrice] = useState("");
+  const [level, setLevel] = useState("");
   const [error, setError] = useState("");
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Basic validation
-    if (!form.courseTitle || !form.trainerName || !form.courseDuration || !form.startDate) {
-      setError("All fields are required.");
+    // Validation - all mandatory except description
+    if (!title || !courseDuration || !price || !level) {
+      setError("Please fill the required fields.");
+      return;
+    }
+
+    if (isNaN(price) || Number(price) <= 0) {
+      setError("Price must be a positive number.");
       return;
     }
 
     try {
-      await addCourse(form);
-      setForm({
-        courseTitle: "",
-        trainerName: "",
-        courseDuration: "",
-        startDate: ""
-      });
-      setError("");
-      if (onCourseAdded) onCourseAdded();
+      const newCourse = {
+        courseTitle: title,
+        description,
+        courseDuration,
+        price: Number(price),
+        level
+      };
+
+      await axios.post("/api/courses", newCourse);
+
+      // Reset after submit
+      resetForm();
+
+      if (onCourseAdded) {
+        onCourseAdded();
+      }
     } catch (err) {
-      setError("Failed to add course. Please try again.");
+      console.error(err);
+      setError("Failed to add course.");
     }
   };
 
-  return (
-    <div>
-      <h2>Add Course</h2>
-      {error && <div style={{ color: "red" }}>[Error - You need to specify the message]</div>}
-      <form onSubmit={handleSubmit}>
-        <label>Course Title *</label>
-        <input
-          type="text"
-          name="courseTitle"
-          value={form.courseTitle}
-          onChange={handleChange}
-          required
-        />
+  const resetForm = () => {
+    setTitle("");
+    setDescription("");
+    setCourseDuration("");
+    setPrice("");
+    setLevel("");
+    setError("");
+  };
 
-        <label>Trainer Name *</label>
-        <input
-          type="text"
-          name="trainerName"
-          value={form.trainerName}
-          onChange={handleChange}
-          required
-        />
+ return (
+<div className="course-form-container">
+<h2>Add Course</h2>
+{error && <p className="error">[Error - You need to specify the message]</p>}
+<form onSubmit={handleSubmit}>
 
-        <label>Course Duration (hours) *</label>
-        <input
-          type="number"
-          name="courseDuration"
-          value={form.courseDuration}
-          onChange={handleChange}
-          required
-        />
+{/* Title */}
+<div className="course-form-group">
+<label>Title <span className="required">*</span></label>
+<input
+type="text"
+value={title}
+onChange={(e) => setTitle(e.target.value)}
+placeholder="Enter title"
+/>
+</div>
 
-        <label>Start Date *</label>
-        <input
-          type="date"
-          name="startDate"
-          value={form.startDate}
-          onChange={handleChange}
-          required
-        />
+{/* Description */}
+<div className="course-form-group">
+<label>Description</label>
+<textarea
+value={description}
+onChange={(e) => setDescription(e.target.value)}
+placeholder="Enter course description (optional)"
+rows={4}
+/>
+</div>
 
-        <div style={{ marginTop: "1rem" }}>
-          <button type="submit">Submit</button>
-        </div>
-      </form>
-    </div>
-  );
+{/* Course Duration */}
+<div className="course-form-group">
+<label>Course Duration (in hours) <span className="required">*</span></label>
+<input
+type="number"
+value={courseDuration}
+onChange={(e) => setCourseDuration(e.target.value)}
+placeholder="Enter course duration"
+/>
+</div>
+
+{/* Price */}
+<div className="course-form-group">
+<label>Price (₹) <span className="required">*</span></label>
+<input
+type="number"
+value={price}
+onChange={(e) => setPrice(e.target.value)}
+placeholder="Enter price"
+/>
+</div>
+
+{/* Level */}
+<div className="course-form-group">
+<label>Level <span className="required">*</span></label>
+<select value={level} onChange={(e) => setLevel(e.target.value)}>
+<option value="">Select level</option>
+<option value="BEGINNER">Beginner</option>
+<option value="INTERMEDIATE">Intermediate</option>
+<option value="ADVANCED">Advanced</option>
+</select>
+</div>
+
+{/* Buttons */}
+<div className="button-group">
+<button type="submit" className="btn-submit">Submit</button>
+<button type="button" className="btn-reset" onClick={resetForm}>
+Reset
+</button>
+</div>
+</form>
+</div>
+);
 };
 
 export default CourseForm;
