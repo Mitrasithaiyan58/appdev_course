@@ -1,66 +1,50 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
-const CourseForm = () => {
-  const [form, setForm] = useState({
-    title: "",
-    description: "",
-    duration: "",
-    level: "",
-    price: ""
-  });
+export default function CourseList() {
+  const [courses, setCourses] = useState([]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
-  };
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/api/courses");
+        setCourses(response.data);
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+      }
+    };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form Submitted", form);
-    // Add your API call here
-  };
-
-  const handleReset = () => {
-    setForm({
-      title: "",
-      description: "",
-      duration: "",
-      level: "",
-      price: ""
-    });
-  };
+    fetchCourses();
+  }, []); // No warning now because fetchCourses is inside useEffect
 
   return (
-    <div className="form-container">
-      <h2>Add Course</h2>
-      <form onSubmit={handleSubmit}>
-        <label>Title *</label>
-        <input name="title" value={form.title} onChange={handleChange} required />
-
-        <label>Description</label>
-        <textarea name="description" value={form.description} onChange={handleChange} />
-
-        <label>Duration (hours) *</label>
-        <input name="duration" type="number" value={form.duration} onChange={handleChange} required />
-
-        <label>Level *</label>
-        <select name="level" value={form.level} onChange={handleChange} required>
-          <option value="">Select Level</option>
-          <option value="BEGINNER">Beginner</option>
-          <option value="INTERMEDIATE">Intermediate</option>
-          <option value="ADVANCED">Advanced</option>
-        </select>
-
-        <label>Price *</label>
-        <input name="price" type="number" value={form.price} onChange={handleChange} required />
-
-        <div style={{ display: "flex", justifyContent: "space-between", marginTop: "1rem" }}>
-          <button type="submit" className="btn-primary">Submit</button>
-          <button type="button" onClick={handleReset} className="btn-secondary">Reset</button>
-        </div>
-      </form>
+    <div className="view-container">
+      <h2>All Courses</h2>
+      {courses.length === 0 ? (
+        <p>No courses found.</p>
+      ) : (
+        <table className="course-table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Trainer</th>
+              <th>Duration</th>
+              <th>Start Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {courses.map((course) => (
+              <tr key={course.courseId}>
+                <td>{course.courseTitle}</td>
+                <td>{course.trainerName}</td>
+                <td>{course.courseDuration} days</td>
+                <td>{course.startDate}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
-};
+}
 
-export default CourseForm;

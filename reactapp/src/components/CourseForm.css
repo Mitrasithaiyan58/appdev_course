@@ -2,7 +2,7 @@
   max-width: 400px;
   margin: auto;
   padding: 20px;
-  background-color: #fff;
+  background-color: transparent; /* Transparent background */
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
@@ -10,38 +10,111 @@
 .course-form-container h2 {
   text-align: center;
   margin-bottom: 20px;
+  color: #333;
 }
 
 .course-form-group {
   margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
 }
 
 .course-form-group label {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #222;
 }
 
-.course-form-group input {
-  width: 100%;
-  padding: 8px;
+.course-form-group input,
+.course-form-group textarea,
+.course-form-group select {
+  padding: 10px;
+  border-radius: 5px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  font-size: 14px;
+  background-color: #f9f9f9;
 }
 
-.course-form-actions {
-  text-align: center;
+.course-form-group input:focus,
+.course-form-group textarea:focus,
+.course-form-group select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+  background-color: #fff;
 }
 
-.course-form-actions button {
-  padding: 8px 16px;
+button[type="submit"] {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
   background-color: #007bff;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
+  font-weight: bold;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-.course-form-actions button:hover {
+button[type="submit"]:hover {
   background-color: #0056b3;
 }
+return (
+<form onSubmit={handleSubmit}>
+<input
+data-testid="title-input"
+placeholder="Title"
+value={form.title}
+onChange={(e) => setForm({ ...form, title: e.target.value })}
+/>
+{errors.title && <div>{errors.title}</div>}
+
+<textarea
+data-testid="description-input"
+placeholder="Description"
+value={form.description}
+onChange={(e) => setForm({ ...form, description: e.target.value })}
+></textarea>
+{errors.description && <div>{errors.description}</div>}
+
+<input
+data-testid="duration-input"
+type="number"
+placeholder="Duration"
+value={form.duration}
+onChange={(e) => setForm({ ...form, duration: Number(e.target.value) })}
+/>
+{errors.duration && <div>{errors.duration}</div>}
+
+<select
+data-testid="level-select"
+value={form.level}
+onChange={(e) => setForm({ ...form, level: e.target.value })}
+>
+<option value="">Select Level</option>
+<option value="BEGINNER">BEGINNER</option>
+<option value="INTERMEDIATE">INTERMEDIATE</option>
+<option value="ADVANCED">ADVANCED</option>
+</select>
+{errors.level && <div>{errors.level}</div>}
+
+<input
+data-testid="price-input"
+type="number"
+placeholder="Price"
+value={form.price}
+onChange={(e) => setForm({ ...form, price: Number(e.target.value) })}
+/>
+{errors.price && <div>{errors.price}</div>}
+
+<button data-testid="submit-btn" type="submit">Submit</button>
+<button data-testid="reset-btn" type="button" onClick={resetForm}>Reset</button>
+
+{success && <div data-testid="api-success">Course added successfully!</div>}
+{apiError && <div data-testid="api-error">{apiError}</div>}
+</form>
+);
+}
+
+export default CourseForm;
