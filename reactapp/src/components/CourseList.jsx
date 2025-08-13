@@ -1,50 +1,59 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+// File: src/components/CourseList.jsx
+import React, { useEffect, useState } from 'react';
+import { BASE_URL } from '../utils/constants'; // ✅ Corrected import path
 
-export default function CourseList() {
+function CourseList() {
   const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [filterActive, setFilterActive] = useState(false);
+
+  const fetchCourses = async () => {
+    try {
+      const res = await fetch(`${BASE_URL}/api/courses`);
+      if (!res.ok) throw new Error('Failed to fetch courses');
+      const data = await res.json();
+      setCourses(data);
+    } catch (err) {
+      setError(err.message || 'Something went wrong');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const response = await axios.get("http://localhost:8080/api/courses");
-        setCourses(response.data);
-      } catch (error) {
-        console.error("Error fetching courses:", error);
-      }
-    };
-
     fetchCourses();
-  }, []); // No warning now because fetchCourses is inside useEffect
+  }, []);
+
+  const filteredCourses = filterActive
+    ? courses.filter(course => course.isActive)
+    : courses;
+
+  if (loading) return <div data-testid="loading">Loading...</div>;
+  if (error) return <div data-testid="error">Error: [Error - You need to specify the message]</div>;
+  if (filteredCourses.length === 0)
+    return <div data-testid="empty">No courses available.</div>;
 
   return (
-    <div className="view-container">
-      <h2>All Courses</h2>
-      {courses.length === 0 ? (
-        <p>No courses found.</p>
-      ) : (
-        <table className="course-table">
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Trainer</th>
-              <th>Duration</th>
-              <th>Start Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {courses.map((course) => (
-              <tr key={course.courseId}>
-                <td>{course.courseTitle}</td>
-                <td>{course.trainerName}</td>
-                <td>{course.courseDuration} days</td>
-                <td>{course.startDate}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+    <div>
+      <button
+        data-testid="active-filter"
+        onClick={() => setFilterActive(prev => !prev)}
+      >
+        {filterActive ? 'Show All Courses' : 'Show Active Courses'}
+      </button>
+
+      {filteredCourses.map(course => (
+        <div key={course.courseId} data-testid={`course-card-${course.courseId}`}>
+          <h3>{course.title}</h3>
+          <p>{course.description}</p>
+          <p>Duration: {course.duration}</p>
+          <p>Level: {course.level}</p>
+          <p>Price: ₹{course.price}</p>
+        </div>
+      ))}
     </div>
   );
 }
 
+export default CourseList;

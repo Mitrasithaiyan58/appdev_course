@@ -1,132 +1,66 @@
 import React, { useState } from "react";
-import axios from "axios";
-import "./CourseForm.css";
 
-const CourseForm = ({ onCourseAdded }) => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [courseDuration, setCourseDuration] = useState("");
-  const [price, setPrice] = useState("");
-  const [level, setLevel] = useState("");
-  const [error, setError] = useState("");
+const CourseForm = () => {
+  const [form, setForm] = useState({
+    title: "",
+    description: "",
+    duration: "",
+    level: "",
+    price: ""
+  });
 
-  const handleSubmit = async (e) => {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Validation - all mandatory except description
-    if (!title || !courseDuration || !price || !level) {
-      setError("Please fill the required fields.");
-      return;
-    }
-
-    if (isNaN(price) || Number(price) <= 0) {
-      setError("Price must be a positive number.");
-      return;
-    }
-
-    try {
-      const newCourse = {
-        courseTitle: title,
-        description,
-        courseDuration,
-        price: Number(price),
-        level
-      };
-
-      await axios.post("/api/courses", newCourse);
-
-      // Reset after submit
-      resetForm();
-
-      if (onCourseAdded) {
-        onCourseAdded();
-      }
-    } catch (err) {
-      console.error(err);
-      setError("Failed to add course.");
-    }
+    console.log("Form Submitted", form);
+    // Add your API call here
   };
 
-  const resetForm = () => {
-    setTitle("");
-    setDescription("");
-    setCourseDuration("");
-    setPrice("");
-    setLevel("");
-    setError("");
+  const handleReset = () => {
+    setForm({
+      title: "",
+      description: "",
+      duration: "",
+      level: "",
+      price: ""
+    });
   };
 
- return (
-<div className="course-form-container">
-<h2>Add Course</h2>
-{error && <p className="error">[Error - You need to specify the message]</p>}
-<form onSubmit={handleSubmit}>
+  return (
+    <div className="form-container">
+      <h2>Add Course</h2>
+      <form onSubmit={handleSubmit}>
+        <label>Title *</label>
+        <input name="title" value={form.title} onChange={handleChange} required />
 
-{/* Title */}
-<div className="course-form-group">
-<label>Title <span className="required">*</span></label>
-<input
-type="text"
-value={title}
-onChange={(e) => setTitle(e.target.value)}
-placeholder="Enter title"
-/>
-</div>
+        <label>Description</label>
+        <textarea name="description" value={form.description} onChange={handleChange} />
 
-{/* Description */}
-<div className="course-form-group">
-<label>Description</label>
-<textarea
-value={description}
-onChange={(e) => setDescription(e.target.value)}
-placeholder="Enter course description (optional)"
-rows={4}
-/>
-</div>
+        <label>Duration (hours) *</label>
+        <input name="duration" type="number" value={form.duration} onChange={handleChange} required />
 
-{/* Course Duration */}
-<div className="course-form-group">
-<label>Course Duration (in hours) <span className="required">*</span></label>
-<input
-type="number"
-value={courseDuration}
-onChange={(e) => setCourseDuration(e.target.value)}
-placeholder="Enter course duration"
-/>
-</div>
+        <label>Level *</label>
+        <select name="level" value={form.level} onChange={handleChange} required>
+          <option value="">Select Level</option>
+          <option value="BEGINNER">Beginner</option>
+          <option value="INTERMEDIATE">Intermediate</option>
+          <option value="ADVANCED">Advanced</option>
+        </select>
 
-{/* Price */}
-<div className="course-form-group">
-<label>Price (₹) <span className="required">*</span></label>
-<input
-type="number"
-value={price}
-onChange={(e) => setPrice(e.target.value)}
-placeholder="Enter price"
-/>
-</div>
+        <label>Price *</label>
+        <input name="price" type="number" value={form.price} onChange={handleChange} required />
 
-{/* Level */}
-<div className="course-form-group">
-<label>Level <span className="required">*</span></label>
-<select value={level} onChange={(e) => setLevel(e.target.value)}>
-<option value="">Select level</option>
-<option value="BEGINNER">Beginner</option>
-<option value="INTERMEDIATE">Intermediate</option>
-<option value="ADVANCED">Advanced</option>
-</select>
-</div>
-
-{/* Buttons */}
-<div className="button-group">
-<button type="submit" className="btn-submit">Submit</button>
-<button type="button" className="btn-reset" onClick={resetForm}>
-Reset
-</button>
-</div>
-</form>
-</div>
-);
+        <div style={{ display: "flex", justifyContent: "space-between", marginTop: "1rem" }}>
+          <button type="submit" className="btn-primary">Submit</button>
+          <button type="button" onClick={handleReset} className="btn-secondary">Reset</button>
+        </div>
+      </form>
+    </div>
+  );
 };
 
 export default CourseForm;
