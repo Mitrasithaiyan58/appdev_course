@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Route, Routes, NavLink } from "react-router-dom";
+import { FaBook, FaCheckCircle } from "react-icons/fa"; // icons
 import CourseForm from "./components/CourseForm";
 import CourseList from "./components/CourseList";
 import "./App.css";
@@ -15,7 +16,7 @@ function App() {
     <Router>
       <div className="app-container">
 
-        {/* Header + Navbar in one line */}
+        {/* Header + Navbar */}
         <div className="dashboard-top">
           <div className="dashboard-header">
             <h1>Course Management System</h1>
@@ -32,7 +33,7 @@ function App() {
         {/* Page Content */}
         <div className="page-content">
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Home courses={courses} />} />
             <Route path="/add-course" element={<CourseForm onAddCourse={handleAddCourse} />} />
             <Route path="/view-courses" element={<CourseList courses={courses} />} />
           </Routes>
@@ -42,11 +43,25 @@ function App() {
   );
 }
 
-const Home = () => (
+// Home component with icons
+const Home = ({ courses }) => (
   <div className="home">
-    <h2>Dashboard Home</h2>
-    <p>Select a menu option to get started.</p>
+    <h2>Welcome to Your Dashboard!</h2>
+    <p>Use the menu above to add new courses or view existing ones.</p>
+
+    <div className="home-stats">
+      <div className="stat-card">
+        <div className="stat-icon"><FaBook size={30} color="#3f51b5" /></div>
+        <h3>Total Courses</h3>
+        <p>{courses.length}</p>
+      </div>
+      <div className="stat-card">
+        <div className="stat-icon"><FaCheckCircle size={30} color="#3f51b5" /></div>
+        <h3>Active Courses</h3>
+        <p>{courses.filter(c => c.isActive).length}</p>
+      </div>
+    </div>
   </div>
 );
 
-export default App;
+export default App; // make sure App is default exported
