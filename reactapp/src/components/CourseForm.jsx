@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import "./CourseForm.css";
 
-const CourseForm = () => {
+export default function CourseForm() {
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -9,15 +10,32 @@ const CourseForm = () => {
     price: ""
   });
 
+  const [errors, setErrors] = useState({});
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
   };
 
+  const validate = () => {
+    const newErrors = {};
+    if (!form.title.trim()) newErrors.title = "Title is required.";
+    if (!form.duration) newErrors.duration = "Duration is required.";
+    if (!form.level) newErrors.level = "Please select a level.";
+    if (!form.price) newErrors.price = "Price is required.";
+    return newErrors;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form submitted:", form);
-    // API call can be placed here
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+    } else {
+      setErrors({});
+      alert("Course submitted successfully!");
+      // API call goes here
+    }
   };
 
   const handleReset = () => {
@@ -28,99 +46,75 @@ const CourseForm = () => {
       level: "",
       price: ""
     });
+    setErrors({});
   };
 
 return (
 <div className="course-form-container">
-<h2 className="text-center">Add Course</h2>
-
+<h2>Add Course</h2>
 <form onSubmit={handleSubmit}>
-{/* Title */}
-<div className="mb-3">
-<label className="form-label" style={{ fontWeight: "bold" }}>
-Title *
-</label>
+<div className="form-group">
+<label>Title *</label>
 <input
-name="title"
 type="text"
-className="form-control"
+name="title"
 value={form.title}
 onChange={handleChange}
 />
+{errors.title && <span className="error">{errors.title}</span>}
 </div>
 
-{/* Description */}
-<div className="mb-3">
-<label className="form-label" style={{ fontWeight: "bold" }}>
-Description
-</label>
+<div className="form-group">
+<label>Description</label>
 <textarea
 name="description"
-className="form-control"
-rows="2"
 value={form.description}
 onChange={handleChange}
 />
 </div>
 
-{/* Duration */}
-<div className="mb-3">
-<label className="form-label" style={{ fontWeight: "bold" }}>
-Duration (hours) *
-</label>
+<div className="form-group">
+<label>Duration (hours) *</label>
 <input
+type="number"
 name="duration"
-type="text"
-className="form-control"
 value={form.duration}
 onChange={handleChange}
 />
+{errors.duration && <span className="error">{errors.duration}</span>}
 </div>
 
-{/* Level */}
-<div className="mb-3">
-<label className="form-label" style={{ fontWeight: "bold" }}>
-Level *
-</label>
+<div className="form-group">
+<label>Level *</label>
 <select
 name="level"
-className="form-select"
 value={form.level}
 onChange={handleChange}
 >
 <option value="">Select Level</option>
-<option value="BEGINNER">Beginner</option>
-<option value="INTERMEDIATE">Intermediate</option>
-<option value="ADVANCED">Advanced</option>
+<option value="Beginner">Beginner</option>
+<option value="Intermediate">Intermediate</option>
+<option value="Advanced">Advanced</option>
 </select>
+{errors.level && <span className="error">{errors.level}</span>}
 </div>
 
-{/* Price */}
-<div className="mb-3">
-<label className="form-label" style={{ fontWeight: "bold" }}>
-Price *
-</label>
+<div className="form-group">
+<label>Price *</label>
 <input
-name="price"
 type="number"
-className="form-control"
+name="price"
 value={form.price}
 onChange={handleChange}
 />
+{errors.price && <span className="error">{errors.price}</span>}
 </div>
 
-{/* Buttons */}
-<div style={{ display: "flex", justifyContent: "space-between" }}>
-<button type="submit" className="btn btn-primary">
-Submit
-</button>
-<button type="button" className="btn btn-secondary" onClick={handleReset}>
-Reset
-</button>
+<div className="button-row">
+<button type="submit" className="submit-btn">Submit</button>
+<button type="button" onClick={handleReset} className="reset-btn">Reset</button>
 </div>
 </form>
 </div>
 );
-};
-
-export default CourseForm;
+}
