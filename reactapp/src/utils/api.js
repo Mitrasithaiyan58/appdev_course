@@ -1,16 +1,13 @@
-import axios from "axios";
+import axios from 'axios';
+const BASE_URL = 'http://localhost:8080/api/complaints';
 
-const API_BASE = "http://localhost:8080/api/courses";
-
-export const getCourses = (activeOnly) => {
-  const url = activeOnly ? `${API_BASE}?active=true` : API_BASE;
-  return axios.get(url).then(res => res.data);
+const ComplaintService = {
+  getAllComplaints: () => axios.get(BASE_URL),
+  getComplaintById: (id) => axios.get(`${BASE_URL}/${id}`),
+  createComplaint: (complaint) => axios.post(BASE_URL, complaint),
+  updateComplaint: (id, complaint) => axios.put(`${BASE_URL}/${id}`, complaint),
+  deleteComplaint: (id) => axios.delete(`${BASE_URL}/${id}`),
+  getComplaintsByStatus: (status) => axios.get(`${BASE_URL}/status/${encodeURIComponent(status)}`),
+  getComplaintsByCategory: (category) => axios.get(`${BASE_URL}/category/${encodeURIComponent(category)}`)
 };
-
-export const createCourse = (course) => {
-  return axios.post(API_BASE, course).then(res => res.data);
-};
-
-export const deleteCourse = (id) => {
-  return axios.delete(`${API_BASE}/${id}`);
-};
+export default ComplaintService;

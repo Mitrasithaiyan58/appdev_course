@@ -1,45 +1,59 @@
-import React, { useEffect, useState } from "react";
-import { getCourses, deleteCourse } from "../utils/api";
+// File: src/components/CourseList.jsx
+import React, { useEffect, useState } from 'react';
+import { BASE_URL } from '../utils/constants'; // ✅ Corrected import path
 
-export default function CourseList({ refreshFlag }) {
+function CourseList() {
   const [courses, setCourses] = useState([]);
-  const [showActive, setShowActive] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [filterActive, setFilterActive] = useState(false);
+
+  const fetchCourses = async () => {
+    try {
+      const res = await fetch(`${BASE_URL}/api/courses`);
+      if (!res.ok) throw new Error('Failed to fetch courses');
+      const data = await res.json();
+      setCourses(data);
+    } catch (err) {
+      setError(err.message || 'Something went wrong');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    getCourses(showActive).then(setCourses);
-  }, [refreshFlag, showActive]); // No loadCourses dependency warning
+    fetchCourses();
+  }, []);
 
-  const handleDelete = async (id) => {
-    await deleteCourse(id);
-    getCourses(showActive).then(setCourses);
-  };
+  const filteredCourses = filterActive
+    ? courses.filter(course => course.isActive)
+    : courses;
+
+  if (loading) return <div data-testid="loading">Loading...</div>;
+  if (error) return <div data-testid="error">Error: [Error - You need to specify the message]</div>;
+  if (filteredCourses.length === 0)
+    return <div data-testid="empty">No courses available.</div>;
 
   return (
     <div>
-      <h2>Courses</h2>
-      <label>
-        <input
-          type="checkbox"
-          checked={showActive}
-          onChange={(e) => setShowActive(e.target.checked)}
-        />
-        Show only active
-      </label>
+      <button
+        data-testid="active-filter"
+        onClick={() => setFilterActive(prev => !prev)}
+      >
+        {filterActive ? 'Show All Courses' : 'Show Active Courses'}
+      </button>
 
-      <ul>
-        {courses.map((c) => (
-          <li key={c.id}>
-            <b>{c.title}</b> — {c.level} — {c.duration} hrs — ₹{c.price} —{" "}
-            {c.active ? "Active" : "Inactive"}
-            <button
-              style={{ marginLeft: "10px" }}
-              onClick={() => handleDelete(c.id)}
-            >
-              Delete
-            </button>
-          </li>
-        ))}
-      </ul>
+      {filteredCourses.map(course => (
+        <div key={course.courseId} data-testid={`course-card-${course.courseId}`}>
+          <h3>{course.title}</h3>
+          <p>{course.description}</p>
+          <p>Duration: {course.duration}</p>
+          <p>Level: {course.level}</p>
+          <p>Price: ₹{course.price}</p>
+        </div>
+      ))}
     </div>
   );
 }
+
+export default CourseList;
