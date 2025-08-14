@@ -1,59 +1,40 @@
-// File: src/components/CourseList.jsx
-import React, { useEffect, useState } from 'react';
-import { BASE_URL } from '../utils/constants'; // ✅ Corrected import path
+import React from "react";
+import "./CourseList.css";
 
-function CourseList() {
-  const [courses, setCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [filterActive, setFilterActive] = useState(false);
-
-  const fetchCourses = async () => {
-    try {
-      const res = await fetch(`${BASE_URL}/api/courses`);
-      if (!res.ok) throw new Error('Failed to fetch courses');
-      const data = await res.json();
-      setCourses(data);
-    } catch (err) {
-      setError(err.message || 'Something went wrong');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchCourses();
-  }, []);
-
-  const filteredCourses = filterActive
-    ? courses.filter(course => course.isActive)
-    : courses;
-
-  if (loading) return <div data-testid="loading">Loading...</div>;
-  if (error) return <div data-testid="error">Error: [Error - You need to specify the message]</div>;
-  if (filteredCourses.length === 0)
-    return <div data-testid="empty">No courses available.</div>;
-
+const CourseList = ({ courses }) => {
   return (
-    <div>
-      <button
-        data-testid="active-filter"
-        onClick={() => setFilterActive(prev => !prev)}
-      >
-        {filterActive ? 'Show All Courses' : 'Show Active Courses'}
-      </button>
-
-      {filteredCourses.map(course => (
-        <div key={course.courseId} data-testid={`course-card-${course.courseId}`}>
-          <h3>{course.title}</h3>
-          <p>{course.description}</p>
-          <p>Duration: {course.duration}</p>
-          <p>Level: {course.level}</p>
-          <p>Price: ₹{course.price}</p>
-        </div>
-      ))}
+    <div className="course-list-container">
+      <h2>All Courses</h2>
+      {courses.length === 0 ? (
+        <p>No courses added yet.</p>
+      ) : (
+        <table>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Description</th>
+              <th>Duration</th>
+              <th>Level</th>
+              <th>Price</th>
+              <th>Active</th>
+            </tr>
+          </thead>
+          <tbody>
+            {courses.map((course, index) => (
+              <tr key={index}>
+                <td>{course.title}</td>
+                <td>{course.description}</td>
+                <td>{course.duration} hrs</td>
+                <td>{course.level}</td>
+                <td>₹{course.price}</td>
+                <td>{course.isActive ? "Yes" : "No"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
-}
+};
 
 export default CourseList;

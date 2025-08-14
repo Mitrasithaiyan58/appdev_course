@@ -1,47 +1,50 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import React, { useState } from "react";
+import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import CourseForm from "./components/CourseForm";
 import CourseList from "./components/CourseList";
 import "./App.css";
 
 function App() {
+  const [courses, setCourses] = useState([]);
+
+  const handleAddCourse = (course) => {
+    setCourses([...courses, course]);
+  };
+
   return (
     <Router>
       <div className="app-container">
         {/* Header */}
-        <header className="header">
-          <h1 className="title">Course Management System</h1>
-          <nav className="nav">
-            <Link to="/">Home</Link>
-            <Link to="/add-course">Add Course</Link>
-            <Link to="/view-courses">View Courses</Link>
-          </nav>
-        </header>
+        <div className="dashboard-header">
+          <h1>Course Management System</h1>
+          <p>Welcome to the trainer's dashboard</p>
+        </div>
+
+        {/* Navigation */}
+        <nav className="navbar">
+          <Link to="/">Home</Link>
+          <Link to="/add-course">Add Course</Link>
+          <Link to="/view-courses">View Courses</Link>
+        </nav>
 
         {/* Page Content */}
-        <main className="content">
+        <div className="page-content">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/add-course" element={<CourseForm />} />
-            <Route path="/view-courses" element={<CourseList />} />
+            <Route path="/add-course" element={<CourseForm onAddCourse={handleAddCourse} />} />
+            <Route path="/view-courses" element={<CourseList courses={courses} />} />
           </Routes>
-        </main>
+        </div>
       </div>
     </Router>
   );
 }
 
-// Simple Home Page
-function Home() {
-  return (
-    <div className="home">
-      <h2>Welcome to the Course Management System</h2>
-      <p>
-        Manage your courses efficiently — add new courses, view course details,
-        and keep track of all your offerings in one place.
-      </p>
-    </div>
-  );
-}
+const Home = () => (
+  <div className="home">
+    <h2>Dashboard Home</h2>
+    <p>Select a menu option to get started.</p>
+  </div>
+);
 
 export default App;

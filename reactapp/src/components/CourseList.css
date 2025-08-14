@@ -1,0 +1,29 @@
+.course-list-container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 15px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+}
+
+.course-list-container h2 {
+  text-align: center;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.course-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.course-table th,
+.course-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+}
+
+.course-table th {
+  background-color: #f4f4f4;
+}
