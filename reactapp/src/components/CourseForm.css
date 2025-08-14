@@ -60,10 +60,3 @@ button[type="submit"] {
 button[type="submit"]:hover {
   background-color: #0056b3;
 }
-.course-form-container {
-  max-width: 400px;
-  margin: auto;
-  padding: 20px;
-  background-color: transparent;
-  border-radius: 8px;
-}

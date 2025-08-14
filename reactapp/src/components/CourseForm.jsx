@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import "./CourseForm.css";
 
 const CourseForm = () => {
   const [form, setForm] = useState({
@@ -7,33 +6,18 @@ const CourseForm = () => {
     description: "",
     duration: "",
     level: "",
-    price: "",
-    active: true
+    price: ""
   });
 
-  const [errors, setErrors] = useState({});
-  const [showOnlyActive, setShowOnlyActive] = useState(false);
-
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setForm({ ...form, [name]: type === "checkbox" ? checked : value });
-  };
-
-  const validate = () => {
-    let tempErrors = {};
-    if (!form.title.trim()) tempErrors.title = "Please fill the required fields.";
-    if (!form.duration.trim()) tempErrors.duration = "Please fill the required fields.";
-    if (!form.price.trim()) tempErrors.price = "Please fill the required fields.";
-    setErrors(tempErrors);
-    return Object.keys(tempErrors).length === 0;
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (validate()) {
-      console.log("Form submitted:", form);
-      // API call can be placed here
-    }
+    console.log("Form submitted:", form);
+    // API call can be placed here
   };
 
   const handleReset = () => {
@@ -42,33 +26,20 @@ const CourseForm = () => {
       description: "",
       duration: "",
       level: "",
-      price: "",
-      active: true
+      price: ""
     });
-    setErrors({});
   };
 
 return (
 <div className="course-form-container">
-{/* Top right checkbox */}
-<div style={{ display: "flex", justifyContent: "flex-end" }}>
-<label className="fw-bold">
-<input
-type="checkbox"
-checked={showOnlyActive}
-onChange={(e) => setShowOnlyActive(e.target.checked)}
-style={{ marginRight: "5px" }}
-/>
-Show only active courses
-</label>
-</div>
-
 <h2 className="text-center">Add Course</h2>
 
 <form onSubmit={handleSubmit}>
 {/* Title */}
 <div className="mb-3">
-<label className="form-label fw-bold">Title *</label>
+<label className="form-label" style={{ fontWeight: "bold" }}>
+Title *
+</label>
 <input
 name="title"
 type="text"
@@ -76,12 +47,13 @@ className="form-control"
 value={form.title}
 onChange={handleChange}
 />
-{errors.title && <small className="text-danger">{errors.title}</small>}
 </div>
 
 {/* Description */}
 <div className="mb-3">
-<label className="form-label fw-bold">Description</label>
+<label className="form-label" style={{ fontWeight: "bold" }}>
+Description
+</label>
 <textarea
 name="description"
 className="form-control"
@@ -93,7 +65,9 @@ onChange={handleChange}
 
 {/* Duration */}
 <div className="mb-3">
-<label className="form-label fw-bold">Duration *</label>
+<label className="form-label" style={{ fontWeight: "bold" }}>
+Duration (hours) *
+</label>
 <input
 name="duration"
 type="text"
@@ -101,12 +75,13 @@ className="form-control"
 value={form.duration}
 onChange={handleChange}
 />
-{errors.duration && <small className="text-danger">{errors.duration}</small>}
 </div>
 
 {/* Level */}
 <div className="mb-3">
-<label className="form-label fw-bold">Level</label>
+<label className="form-label" style={{ fontWeight: "bold" }}>
+Level *
+</label>
 <select
 name="level"
 className="form-select"
@@ -122,7 +97,9 @@ onChange={handleChange}
 
 {/* Price */}
 <div className="mb-3">
-<label className="form-label fw-bold">Price *</label>
+<label className="form-label" style={{ fontWeight: "bold" }}>
+Price *
+</label>
 <input
 name="price"
 type="number"
@@ -130,10 +107,9 @@ className="form-control"
 value={form.price}
 onChange={handleChange}
 />
-{errors.price && <small className="text-danger">{errors.price}</small>}
 </div>
 
-{/* Submit & Reset buttons */}
+{/* Buttons */}
 <div style={{ display: "flex", justifyContent: "space-between" }}>
 <button type="submit" className="btn btn-primary">
 Submit
