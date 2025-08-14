@@ -86,8 +86,8 @@ Active
 </label>
 
 <div className="form-buttons">
-<button type="submit" className="btn-submit">Submit</button>
-<button type="reset" className="btn-reset" onClick={() => setForm({
+<button type="submit" className="submit-btn">Submit</button>
+<button type="reset" className="reset-btn" onClick={() => setForm({
 title: "",
 description: "",
 duration: "",

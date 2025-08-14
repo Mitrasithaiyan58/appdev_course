@@ -14,18 +14,20 @@ function App() {
   return (
     <Router>
       <div className="app-container">
-        {/* Header */}
-        <div className="dashboard-header">
-          <h1>Course Management System</h1>
-          <p>Welcome to the trainer's dashboard</p>
-        </div>
 
-        {/* Navigation */}
-        <nav className="navbar">
-          <Link to="/">Home</Link>
-          <Link to="/add-course">Add Course</Link>
-          <Link to="/view-courses">View Courses</Link>
-        </nav>
+        {/* Header + Navbar in one line */}
+        <div className="dashboard-top">
+          <div className="dashboard-header">
+            <h1>Course Management System</h1>
+            <p>Welcome to the trainer's dashboard</p>
+          </div>
+
+          <nav className="navbar">
+            <Link to="/">Home</Link>
+            <Link to="/add-course">Add Course</Link>
+            <Link to="/view-courses">View Courses</Link>
+          </nav>
+        </div>
 
         {/* Page Content */}
         <div className="page-content">
