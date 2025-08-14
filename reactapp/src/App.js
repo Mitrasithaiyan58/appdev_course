@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, NavLink } from "react-router-dom";
 import CourseForm from "./components/CourseForm";
 import CourseList from "./components/CourseList";
 import "./App.css";
@@ -23,9 +23,9 @@ function App() {
           </div>
 
           <nav className="navbar">
-            <Link to="/">Home</Link>
-            <Link to="/add-course">Add Course</Link>
-            <Link to="/view-courses">View Courses</Link>
+            <NavLink to="/" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Home</NavLink>
+            <NavLink to="/add-course" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Add Course</NavLink>
+            <NavLink to="/view-courses" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>View Courses</NavLink>
           </nav>
         </div>
 

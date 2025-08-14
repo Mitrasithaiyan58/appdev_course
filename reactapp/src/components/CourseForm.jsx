@@ -51,7 +51,7 @@ const CourseForm = ({ onAddCourse }) => {
     alert("Course added successfully!");
   };
 
- return (
+  return (
 <div className="course-form-container">
 <h2>Add Course</h2>
 <form onSubmit={handleSubmit}>
@@ -80,7 +80,8 @@ const CourseForm = ({ onAddCourse }) => {
 <input type="number" name="price" value={form.price} onChange={handleChange} />
 {errors.price && <span className="error">{errors.price}</span>}
 
-<label>
+{/* Properly aligned checkbox */}
+<label className="checkbox-label">
 <input type="checkbox" name="isActive" checked={form.isActive} onChange={handleChange} />
 Active
 </label>

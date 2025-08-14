@@ -43,22 +43,27 @@ textarea {
   margin-top: 2px;
 }
 
+/* Checkbox Alignment - aligned with inputs */
 .checkbox-label {
-  margin-top: 10px;
   display: flex;
-  align-items: center;
+  align-items: center; /* vertically center the checkbox and text */
+  gap: 10px;           /* space between checkbox and text */
+  font-weight: bold;
+  font-size: 0.95rem;
+  margin-top: 10px;
+  margin-left: 0;      /* aligns with left edge of input fields */
 }
 
 .form-buttons {
   display: flex;
   justify-content: space-between;
-  margin-top: 20px;
+  margin-top: 15px;
   gap: 10px;
 }
 
 /* Submit Button */
 .submit-btn {
-  flex: 1; /* equal width */
+  flex: 1; 
   background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
   color: white;
   padding: 12px 0;
@@ -80,7 +85,7 @@ textarea {
 
 /* Reset Button */
 .reset-btn {
-  flex: 1; /* equal width */
+  flex: 1; 
   background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
   color: white;
   padding: 12px 0;

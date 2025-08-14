@@ -6,9 +6,9 @@ const CourseList = ({ courses }) => {
     <div className="course-list-container">
       <h2>All Courses</h2>
       {courses.length === 0 ? (
-        <p>No courses added yet.</p>
+        <p style={{ textAlign: "center" }}>No courses added yet.</p>
       ) : (
-        <table>
+        <table className="course-table">
           <thead>
             <tr>
               <th>Title</th>
@@ -16,7 +16,7 @@ const CourseList = ({ courses }) => {
               <th>Duration</th>
               <th>Level</th>
               <th>Price</th>
-              <th>Active</th>
+              <th>Status</th>
             </tr>
           </thead>
           <tbody>
@@ -27,7 +27,13 @@ const CourseList = ({ courses }) => {
                 <td>{course.duration} hrs</td>
                 <td>{course.level}</td>
                 <td>₹{course.price}</td>
-                <td>{course.isActive ? "Yes" : "No"}</td>
+                <td>
+                  {course.isActive ? (
+                    <span className="active-badge">Active</span>
+                  ) : (
+                    <span className="inactive-badge">Inactive</span>
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>
