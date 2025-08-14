@@ -1,42 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import CourseForm from "./components/CourseForm";
 import CourseList from "./components/CourseList";
-import "./App.css";
-import { CourseViewProvider, useCourseView } from "./context/Context";
 
-function AppContent() {
-  const { showForm, setShowForm } = useCourseView();
+export default function App() {
+  const [refreshFlag, setRefreshFlag] = useState(0);
 
   return (
-    <div className="app-container">
-      <h1 className="main-title">Course Management System</h1>
-      <div className="button-group">
-        <button
-          className={`toggle-button ${!showForm ? "active" : ""}`}
-          onClick={() => setShowForm(false)}
-        >
-          View Courses
-        </button>
-        <button
-          className={`toggle-button ${showForm ? "active" : ""}`}
-          onClick={() => setShowForm(true)}
-        >
-          Add Course
-        </button>
-      </div>
-      <div className="content-container">
-        {showForm ? <CourseForm /> : <CourseList />}
-      </div>
+    <div style={{ display: "flex", gap: "50px", padding: "20px" }}>
+      <CourseForm onCourseAdded={() => setRefreshFlag(f => f + 1)} />
+      <CourseList refreshFlag={refreshFlag} />
     </div>
   );
 }
-
-function App() {
-  return (
-    <CourseViewProvider>
-      <AppContent />
-    </CourseViewProvider>
-  );
-}
-
-export default App;

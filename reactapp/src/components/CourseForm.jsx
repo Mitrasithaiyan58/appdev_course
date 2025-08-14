@@ -1,50 +1,139 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState } from "react";
+import { createCourse } from "../utils/api";
 
-export default function CourseList() {
-  const [courses, setCourses] = useState([]);
+const initialForm = {
+  title: "",
+  description: "",
+  duration: "",
+  level: "",
+  price: "",
+  active: true
+};
 
-  useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const response = await axios.get("http://localhost:8080/api/courses");
-        setCourses(response.data);
-      } catch (error) {
-        console.error("Error fetching courses:", error);
-      }
-    };
+export default function CourseForm({ onCourseAdded }) {
+  const [form, setForm] = useState(initialForm);
+  const [error, setError] = useState("");
 
-    fetchCourses();
-  }, []); // No warning now because fetchCourses is inside useEffect
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setForm({ ...form, [name]: type === "checkbox" ? checked : value });
+  };
 
-  return (
-    <div className="view-container">
-      <h2>All Courses</h2>
-      {courses.length === 0 ? (
-        <p>No courses found.</p>
-      ) : (
-        <table className="course-table">
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Trainer</th>
-              <th>Duration</th>
-              <th>Start Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {courses.map((course) => (
-              <tr key={course.courseId}>
-                <td>{course.courseTitle}</td>
-                <td>{course.trainerName}</td>
-                <td>{course.courseDuration} days</td>
-                <td>{course.startDate}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-    </div>
-  );
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!form.title || !form.duration || !form.level || !form.price) {
+      setError("⚠ Please fill all the required fields.");
+      return;
+    }
+    try {
+      await createCourse({
+        ...form,
+        duration: parseInt(form.duration),
+        price: parseFloat(form.price)
+      });
+      setForm(initialForm);
+      setError("");
+      onCourseAdded();
+    } catch (err) {
+      setError("❌ Error adding course. Please try again.");
+    }
+  };
+
+  const handleReset = () => {
+    setForm(initialForm);
+    setError("");
+  };
+
+return (
+<div className="card p-4 shadow-sm" style={{ maxWidth: "400px" }}>
+<h4 className="text-center mb-3">Add Course</h4>
+{error && <div className="alert alert-danger">[Error - You need to specify the message]</div>}
+
+<form onSubmit={handleSubmit}>
+{/* Title */}
+<div className="mb-3">
+<label className="form-label">Title *</label>
+<input
+name="title"
+type="text"
+className="form-control"
+value={form.title}
+onChange={handleChange}
+/>
+</div>
+
+{/* Description */}
+<div className="mb-3">
+<label className="form-label">Description</label>
+<textarea
+name="description"
+className="form-control"
+rows="2"
+value={form.description}
+onChange={handleChange}
+/>
+</div>
+
+{/* Duration */}
+<div className="mb-3">
+<label className="form-label">Duration (hours) *</label>
+<input
+name="duration"
+type="number"
+className="form-control"
+value={form.duration}
+onChange={handleChange}
+/>
+</div>
+
+{/* Level */}
+<div className="mb-3">
+<label className="form-label">Level *</label>
+<select
+name="level"
+className="form-select"
+value={form.level}
+onChange={handleChange}
+>
+<option value="">Select Level</option>
+<option value="BEGINNER">Beginner</option>
+<option value="INTERMEDIATE">Intermediate</option>
+<option value="ADVANCED">Advanced</option>
+</select>
+</div>
+
+{/* Price */}
+<div className="mb-3">
+<label className="form-label">Price *</label>
+<input
+name="price"
+type="number"
+className="form-control"
+value={form.price}
+onChange={handleChange}
+/>
+</div>
+
+{/* Active Checkbox */}
+<div className="form-check mb-3">
+<input
+className="form-check-input"
+type="checkbox"
+name="active"
+checked={form.active}
+onChange={handleChange}
+/>
+<label className="form-check-label">Active</label>
+</div>
+
+{/* Buttons */}
+<div className="d-flex justify-content-between">
+<button type="submit" className="btn btn-primary">Submit</button>
+<button type="button" className="btn btn-secondary" onClick={handleReset}>
+Reset
+</button>
+</div>
+</form>
+</div>
+);
 }
-
