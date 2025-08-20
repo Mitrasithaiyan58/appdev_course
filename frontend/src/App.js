@@ -1,31 +1,7 @@
-/*import logo from './logo.svg';
-import './App.css';
-
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
-
-export default App;*/
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes, NavLink } from "react-router-dom";
-import { FaBook, FaCheckCircle } from "react-icons/fa"; // icons
+import { FaBook, FaCheckCircle } from "react-icons/fa";
+import axios from "axios"; // ✅ axios import
 import CourseForm from "./components/CourseForm";
 import CourseList from "./components/CourseList";
 import "./App.css";
@@ -33,14 +9,35 @@ import "./App.css";
 function App() {
   const [courses, setCourses] = useState([]);
 
-  const handleAddCourse = (course) => {
-    setCourses([...courses, course]);
+  // ✅ Fetch courses from backend when app loads
+  useEffect(() => {
+    fetchCourses();
+  }, []);
+
+  const fetchCourses = async () => {
+    try {
+      const res = await axios.get("http://localhost:8080/api/courses");
+      setCourses(res.data);
+    } catch (err) {
+      console.error("Error fetching courses:", err);
+    }
+  };
+
+  // ✅ Add new course to backend
+  const handleAddCourse = async (course) => {
+    try {
+      const res = await axios.post("http://localhost:8080/api/courses", course);
+      setCourses([...courses, res.data]); // update frontend list
+      alert("Course added successfully!");
+    } catch (err) {
+      console.error("Error adding course:", err);
+      alert("Failed to add course!");
+    }
   };
 
   return (
     <Router>
       <div className="app-container">
-
         {/* Header + Navbar */}
         <div className="dashboard-top">
           <div className="dashboard-header">
@@ -68,7 +65,7 @@ function App() {
   );
 }
 
-// Home component with icons
+// ✅ Home component with stats
 const Home = ({ courses }) => (
   <div className="home">
     <h2>Welcome to Your Dashboard!</h2>
@@ -89,4 +86,4 @@ const Home = ({ courses }) => (
   </div>
 );
 
-export default App; // make sure App is default exported
+export default App;
