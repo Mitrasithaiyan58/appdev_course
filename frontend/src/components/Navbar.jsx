@@ -8,6 +8,7 @@ const Navbar = ({ setView }) => {
         <button onClick={() => setView("home")}> Home</button>
         <button onClick={() => setView("add")}>Add Course</button>
         <button onClick={() => setView("view")}> View Courses</button>
+        <button onClick={() => setView("login")}>Login</button>
       </div>
     </nav>
   );
