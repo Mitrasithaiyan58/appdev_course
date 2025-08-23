@@ -1,58 +1,39 @@
 package com.examly.springapp.controller;
 
 import com.examly.springapp.model.User;
-import com.examly.springapp.service.UserService;
-
-import org.springframework.http.HttpStatus;
+import com.examly.springapp.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/dashboard")
 public class UserController {
 
-    private final UserService userService;
+    @Autowired
+    private UserRepository userRepository;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+    // Get dashboard data based on role
+    @GetMapping("/{userId}")
+    public ResponseEntity<?> getDashboard(@PathVariable Long userId) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (!optionalUser.isPresent()) {
+            return ResponseEntity.status(404).body("User not found");
+        }
 
-    // ✅ Create user
-    @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User savedUser = userService.createUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
-    }
-
-    // ✅ Get all users
-    @GetMapping
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
-    }
-
-    // ✅ Get user by ID
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        User user = userService.getUserById(id);
-        return ResponseEntity.ok(user);
-    }
-
-    // ✅ Update user
-    @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(
-            @PathVariable Long id,
-            @RequestBody User updatedUser) {
-        User user = userService.updateUser(id, updatedUser);
-        return ResponseEntity.ok(user);
-    }
-
-    // ✅ Delete user
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
-        return ResponseEntity.noContent().build();
+        User user = optionalUser.get();
+        switch (user.getRole()) {
+            case STUDENT:
+                return ResponseEntity.ok("Student Dashboard Data");
+            case TRAINER:
+                return ResponseEntity.ok("Trainer Dashboard Data");
+            case TRAINING_MANAGER:
+                return ResponseEntity.ok("Training Manager Dashboard Data");
+            case ADMIN:
+                return ResponseEntity.ok("Admin Dashboard Data");
+            default:
+                return ResponseEntity.status(403).body("Role not recognized");
+        }
     }
 }
